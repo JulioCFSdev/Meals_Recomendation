@@ -4,20 +4,29 @@ def z_score_normalization(dataframe):
     df_normalizated = (dataframe - dataframe.mean()) / dataframe.std()
     return df_normalizated
 
-df_breakfast = pd.read_csv("datasets\Delicias da Debora e Julio - Cafe da manha  e Almoço - Cafe da Manha (2).csv")
+df_breakfast = pd.read_csv("datasets\Delicias da Debora e Julio - Cafe da Manha.csv")
 
-identify_collunns = df_breakfast.iloc[:, :2]
+df_brunch = pd.read_csv("datasets\Delicias da Debora e Julio - Almoço.csv")
 
-normalize_collunns = df_breakfast.columns[-4:]
+df_dinner = pd.read_csv("datasets\Delicias da Debora e Julio - Janta.csv")
 
-df_breakfast[normalize_collunns] = df_breakfast[normalize_collunns].astype(float)
+def normalize_food_dataframe(dataframe, meal_name):
+    identify_collunns = dataframe.iloc[:, :2]
 
-df_predictor_normalizated = z_score_normalization(df_breakfast[normalize_collunns])
+    normalize_collunns = dataframe.columns[-4:]
 
-df_predictor_normalizated = pd.concat([identify_collunns, df_predictor_normalizated], axis=1)
+    dataframe[normalize_collunns] = dataframe[normalize_collunns].astype(float)
 
-df_predictor_normalizated.info()
+    df_predictor_normalizated = z_score_normalization(dataframe[normalize_collunns])
 
-file_path = 'datasets/breakfast_normalizated.csv'
+    df_predictor_normalizated = pd.concat([identify_collunns, df_predictor_normalizated], axis=1)
 
-df_predictor_normalizated.to_csv(file_path, index=False)
+    df_predictor_normalizated.info()
+
+    file_path = 'datasets/' + meal_name + '_normalizated.csv'
+
+    df_predictor_normalizated.to_csv(file_path, index=False)
+
+normalize_food_dataframe(df_brunch, "brunch")
+
+normalize_food_dataframe(df_brunch, "dinner")
